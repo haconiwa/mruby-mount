@@ -1,5 +1,5 @@
 class Mount
-  def bye
-    self.hello + " bye"
+  class << self
+    alias current_environ new
   end
 end
