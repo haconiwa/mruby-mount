@@ -1,0 +1,6 @@
+name: mruby-mount
+description: Mount class
+author: Uchio Kondo
+website: https://github.com/udzura/mruby-mount
+protocol: git
+repository: https://github.com/udzura/mruby-mount.git
