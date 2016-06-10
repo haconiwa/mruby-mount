@@ -87,7 +87,9 @@ void mrb_mruby_mount_gem_init(mrb_state *mrb)
     mrb_define_method(mrb, mount, "__mount__",  mrb_mount_mount, MRB_ARGS_REQ(5));
     mrb_define_method(mrb, mount, "umount",     mrb_mount_umount, MRB_ARGS_ARG(1, 1));
 
-    mrb_define_const(mrb, mount, "MS_BIND",        mrb_fixnum_value(MS_BIND));
+    // please see <linux/fs.h>
+    mrb_define_const(mrb, mount, "MS_MGC_VAL",     mrb_fixnum_value(MS_MGC_VAL));
+
     mrb_define_const(mrb, mount, "MS_DIRSYNC",     mrb_fixnum_value(MS_DIRSYNC));
     mrb_define_const(mrb, mount, "MS_MANDLOCK",    mrb_fixnum_value(MS_MANDLOCK));
     mrb_define_const(mrb, mount, "MS_MOVE",        mrb_fixnum_value(MS_MOVE));
@@ -99,6 +101,8 @@ void mrb_mruby_mount_gem_init(mrb_state *mrb)
     mrb_define_const(mrb, mount, "MS_RDONLY",      mrb_fixnum_value(MS_RDONLY));
     mrb_define_const(mrb, mount, "MS_REMOUNT",     mrb_fixnum_value(MS_REMOUNT));
     mrb_define_const(mrb, mount, "MS_SYNCHRONOUS", mrb_fixnum_value(MS_SYNCHRONOUS));
+    mrb_define_const(mrb, mount, "MS_BIND",        mrb_fixnum_value(MS_BIND));
+    mrb_define_const(mrb, mount, "MS_PRIVATE",     mrb_fixnum_value(MS_PRIVATE));
 
     mrb_define_const(mrb, mount, "MNT_FORCE",  mrb_fixnum_value(MNT_FORCE));
     mrb_define_const(mrb, mount, "MNT_DETACH", mrb_fixnum_value(MNT_DETACH));
