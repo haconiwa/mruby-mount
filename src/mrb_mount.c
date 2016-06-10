@@ -61,12 +61,31 @@ static mrb_value mrb_mount_mount(mrb_state *mrb, mrb_value self)
   return mrb_fixnum_value(ret);
 }
 
+static mrb_value mrb_mount_umount(mrb_state *mrb, mrb_value self)
+{
+  char* target;
+  mrb_value f = mrb_nil_value();
+  int umountflag, ret;
+
+  mrb_get_args(mrb, "z|i", &target, &f);
+  umountflag = mrb_nil_p(f) ? 0 : mrb_fixnum(f);
+
+  ret = umount2(target, umountflag);
+  if(ret == -1) {
+    perror("umount");
+    mrb_sys_fail(mrb, "umount failed.");
+  }
+
+  return mrb_fixnum_value(ret);
+}
+
 void mrb_mruby_mount_gem_init(mrb_state *mrb)
 {
     struct RClass *mount;
     mount = mrb_define_class(mrb, "Mount", mrb->object_class);
     mrb_define_method(mrb, mount, "initialize", mrb_mount_init, MRB_ARGS_NONE());
-    mrb_define_method(mrb, mount, "__mount__", mrb_mount_mount, MRB_ARGS_REQ(5));
+    mrb_define_method(mrb, mount, "__mount__",  mrb_mount_mount, MRB_ARGS_REQ(5));
+    mrb_define_method(mrb, mount, "umount",     mrb_mount_umount, MRB_ARGS_ARG(1, 1));
 
     mrb_define_const(mrb, mount, "MS_BIND",        mrb_fixnum_value(MS_BIND));
     mrb_define_const(mrb, mount, "MS_DIRSYNC",     mrb_fixnum_value(MS_DIRSYNC));
