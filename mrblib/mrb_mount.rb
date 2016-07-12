@@ -20,10 +20,20 @@ class Mount
     flag |= parse_flags(options)
 
     __mount__(source, target, "", flag, nil)
+
+    if options[:readonly]
+      remount(target, readonly: true, bind: true)
+    end
   end
 
   def make_private(target)
     flag = MS_PRIVATE
+    __mount__("none", target, nil, flag, nil)
+  end
+
+  def remount(target, options={})
+    flag =  MS_MGC_VAL | MS_REMOUNT
+    flag |= parse_flags(options)
     __mount__("none", target, nil, flag, nil)
   end
 
@@ -34,19 +44,23 @@ class Mount
     end
 
     flag = 0
-    if options.delete(:readonly)
+    if options[:bind]
+      flag |= MS_BIND
+    end
+
+    if options[:readonly]
       flag |= MS_RDONLY
     end
 
-    if options.delete(:nosuid)
+    if options[:nosuid)]
       flag |= MS_NOSUID
     end
 
-    if options.delete(:noexec)
+    if options[:noexec]
       flag |= MS_NOEXEC
     end
 
-    if options.delete(:remount)
+    if options[:remount]
       flag |= MS_REMOUNT
     end
 
