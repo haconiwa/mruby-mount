@@ -52,7 +52,7 @@ class Mount
       flag |= MS_RDONLY
     end
 
-    if options[:nosuid)]
+    if options[:nosuid]
       flag |= MS_NOSUID
     end
 
