@@ -24,7 +24,7 @@ m.make_private("/")
 # => 0
 m.bind_mount("/var/lib/myroot", "/var/lib/newroot")
 # => 0
-m.umount("/var/lib/newroot)
+m.umount("/var/lib/newroot")
 # => 0
 m.mount("proc", "/proc", type: "proc")
 # => 0
