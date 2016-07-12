@@ -30,6 +30,10 @@ m.mount("proc", "/proc", type: "proc")
 # => 0
 ```
 
+### options supported
+
+* `noexec`, `nosuid`, `readonly` `remount` are supported (some of which are untested) in `mount/bind_mount`.
+
 ## Restrictions
 
 This mgem may work only Linux.
