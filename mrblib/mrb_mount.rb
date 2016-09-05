@@ -7,19 +7,22 @@ class Mount
     unless type = options[:type]
       raise ArgumentError, ":type must be specified"
     end
+    data = options[:options]
 
     flag =  MS_MGC_VAL
     flag |= parse_flags(options)
 
-    __mount__(source, target, type, flag, nil)
+    __mount__(source, target, type, flag, data)
   end
 
   def bind_mount(source, target, options={})
+    data = options[:options]
+
     flag =  MS_MGC_VAL
     flag |= MS_BIND
     flag |= parse_flags(options)
 
-    __mount__(source, target, "", flag, nil)
+    __mount__(source, target, "", flag, data)
 
     if options[:readonly]
       remount(target, readonly: true, bind: true)
@@ -32,9 +35,11 @@ class Mount
   end
 
   def remount(target, options={})
+    data = options[:options]
+
     flag =  MS_MGC_VAL | MS_REMOUNT
     flag |= parse_flags(options)
-    __mount__("none", target, nil, flag, nil)
+    __mount__("none", target, nil, flag, data)
   end
 
   private
