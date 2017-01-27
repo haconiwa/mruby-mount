@@ -10,6 +10,8 @@
 
 #include <stdio.h>
 #include <sys/mount.h>
+#include <errno.h>
+#include <string.h>
 
 #include <mruby.h>
 #include <mruby/data.h>
@@ -18,24 +20,8 @@
 
 #define DONE mrb_gc_arena_restore(mrb, 0);
 
-typedef struct {
-  char *str;
-  int len;
-} mrb_mount_data;
-
-static const struct mrb_data_type mrb_mount_data_type = {
-  "mrb_mount_data", mrb_free,
-};
-
 static mrb_value mrb_mount_init(mrb_state *mrb, mrb_value self)
 {
-  mrb_mount_data *data;
-
-  data = (mrb_mount_data *)DATA_PTR(self);
-  if (data) {
-    mrb_free(mrb, data);
-  }
-  DATA_TYPE(self) = &mrb_mount_data_type;
   DATA_PTR(self) = NULL;
 
   return self;
@@ -55,7 +41,7 @@ static mrb_value mrb_mount_mount(mrb_state *mrb, mrb_value self)
   if(ret == -1) {
     char buf[1024];
     if (strerror_r(errno, buf, 1024) == NULL) {
-      mrb_sys_fail(mrb, "[BUG] strerror_r failed at mrb_mount.c:" __LINE__ ". Please report haconiwa-dev");
+      mrb_sys_fail(mrb, "[BUG] strerror_r failed at mrb_mount.c:44. Please report haconiwa-dev");
     }
 
     asprintf(&err_msg, "syscall mount failed. message: %s, args: %s, %s, %s, %i, %s", buf, source, target, fstype, mountflag, data);
@@ -79,7 +65,7 @@ static mrb_value mrb_mount_umount(mrb_state *mrb, mrb_value self)
   if(ret == -1) {
     char buf[1024];
     if (strerror_r(errno, buf, 1024) == NULL) {
-      mrb_sys_fail(mrb, "[BUG] strerror_r failed at mrb_mount.c:" __LINE__ ". Please report haconiwa-dev");
+      mrb_sys_fail(mrb, "[BUG] strerror_r failed at mrb_mount.c:68. Please report haconiwa-dev");
     }
 
     asprintf(&err_msg, "umount failed: %s", buf);
