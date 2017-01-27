@@ -40,11 +40,12 @@ static mrb_value mrb_mount_mount(mrb_state *mrb, mrb_value self)
   ret = mount(source, target, fstype, mountflag, data);
   if(ret == -1) {
     char buf[1024];
-    if (strerror_r(errno, buf, 1024) == NULL) {
+    char *ret;
+    if ((ret = strerror_r(errno, buf, 1024)) == NULL) {
       mrb_sys_fail(mrb, "[BUG] strerror_r failed at mrb_mount.c:44. Please report haconiwa-dev");
     }
 
-    asprintf(&err_msg, "syscall mount failed. message: %s, args: %s, %s, %s, %i, %s", buf, source, target, fstype, mountflag, data);
+    asprintf(&err_msg, "syscall mount failed. message: %s, args: %s, %s", ret, source, target);
     mrb_sys_fail(mrb, err_msg);
   }
 
@@ -53,8 +54,8 @@ static mrb_value mrb_mount_mount(mrb_state *mrb, mrb_value self)
 
 static mrb_value mrb_mount_umount(mrb_state *mrb, mrb_value self)
 {
-  char* target;
-  char* err_msg;
+  char *target;
+  char *err_msg;
   mrb_value f = mrb_nil_value();
   int umountflag, ret;
 
@@ -64,11 +65,12 @@ static mrb_value mrb_mount_umount(mrb_state *mrb, mrb_value self)
   ret = umount2(target, umountflag);
   if(ret == -1) {
     char buf[1024];
-    if (strerror_r(errno, buf, 1024) == NULL) {
+    char *ret;
+    if ((ret = strerror_r(errno, buf, 1024)) == NULL) {
       mrb_sys_fail(mrb, "[BUG] strerror_r failed at mrb_mount.c:68. Please report haconiwa-dev");
     }
 
-    asprintf(&err_msg, "umount failed: %s", buf);
+    asprintf(&err_msg, "umount failed: %s", ret);
     mrb_sys_fail(mrb, err_msg);
   }
 
