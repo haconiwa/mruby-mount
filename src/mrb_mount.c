@@ -101,6 +101,8 @@ void mrb_mruby_mount_gem_init(mrb_state *mrb)
   mrb_define_const(mrb, mount, "MS_SYNCHRONOUS", mrb_fixnum_value(MS_SYNCHRONOUS));
   mrb_define_const(mrb, mount, "MS_BIND",        mrb_fixnum_value(MS_BIND));
   mrb_define_const(mrb, mount, "MS_PRIVATE",     mrb_fixnum_value(MS_PRIVATE));
+  mrb_define_const(mrb, mount, "MS_REC",         mrb_fixnum_value(MS_REC));
+  mrb_define_const(mrb, mount, "MS_SLAVE",       mrb_fixnum_value(MS_SLAVE));
 
   mrb_define_const(mrb, mount, "MNT_FORCE",  mrb_fixnum_value(MNT_FORCE));
   mrb_define_const(mrb, mount, "MNT_DETACH", mrb_fixnum_value(MNT_DETACH));
