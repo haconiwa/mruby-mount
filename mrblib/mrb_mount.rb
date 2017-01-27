@@ -34,6 +34,11 @@ class Mount
     __mount__("none", target, nil, flag, nil)
   end
 
+  def make_rslave(target)
+    flag = MS_REC | MS_SLAVE
+    __mount__("none", target, nil, flag, nil)
+  end
+
   def remount(target, options={})
     data = options[:options]
 
