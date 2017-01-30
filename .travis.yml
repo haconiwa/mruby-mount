@@ -10,5 +10,6 @@ language: c
 compiler:
   - gcc
 script:
+  - rake format
   - sudo rake test
 

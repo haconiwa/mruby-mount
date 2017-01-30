@@ -14,6 +14,11 @@ task :test => :mruby do
   sh "cd mruby && MRUBY_CONFIG=#{MRUBY_CONFIG} rake all test"
 end
 
+desc "code format"
+task :format do
+  sh "./misc/apply-clang-format"
+end
+
 desc "cleanup"
 task :clean do
   sh "cd mruby && rake deep_clean"
