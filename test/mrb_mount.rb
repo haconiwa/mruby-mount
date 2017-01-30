@@ -25,3 +25,13 @@ assert("Mount#umount") do
   m.umount("#{current_dir}/test_dst_dir")
   assert_true File.exists? "#{current_dir}/test_dst_dir/dst"
 end
+
+assert("Mount#mount") do
+  m = Mount.new
+  current_dir = File.expand_path(File.dirname(__FILE__))
+
+  m.mount("proc", "#{current_dir}/test_dst_dir", type: "proc")
+  assert_true File.exists? "#{current_dir}/test_dst_dir/self/mounts"
+
+  m.umount("#{current_dir}/test_dst_dir")
+end
