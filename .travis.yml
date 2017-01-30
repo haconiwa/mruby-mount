@@ -9,7 +9,6 @@ addons:
 language: c
 compiler:
   - gcc
-  - clang
 script:
   - sudo rake test
 
