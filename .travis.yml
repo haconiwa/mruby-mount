@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 addons:
   apt:
     packages:
@@ -11,5 +11,5 @@ compiler:
   - gcc
   - clang
 script:
-  - rake test
+  - sudo rake test
 
