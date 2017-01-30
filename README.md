@@ -38,6 +38,13 @@ m.mount("proc", "/proc", type: "proc")
 
 This mgem may work only Linux.
 
+## Formatter
+
+```
+clang-format -i src/mrb_mount.c
+clang-format -i src/mrb_mount.h
+```
+
 ## License
 
 under the MIT License:
