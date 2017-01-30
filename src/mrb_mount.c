@@ -42,7 +42,8 @@ static mrb_value mrb_mount_mount(mrb_state *mrb, mrb_value self)
     char buf[1024];
     char *ret;
     if ((ret = strerror_r(errno, buf, 1024)) == NULL) {
-      mrb_sys_fail(mrb, "[BUG] strerror_r failed at mrb_mount.c:44. Please report haconiwa-dev");
+      asprintf(&err_msg, "[BUG] strerror_r failed at %s:%d. Please report haconiwa-dev", __FILE__, __LINE__);
+      mrb_sys_fail(mrb, err_msg);
     }
 
     asprintf(&err_msg, "syscall mount failed. message: %s, args: %s, %s", ret, source, target);
@@ -67,7 +68,8 @@ static mrb_value mrb_mount_umount(mrb_state *mrb, mrb_value self)
     char buf[1024];
     char *ret;
     if ((ret = strerror_r(errno, buf, 1024)) == NULL) {
-      mrb_sys_fail(mrb, "[BUG] strerror_r failed at mrb_mount.c:68. Please report haconiwa-dev");
+      asprintf(&err_msg, "[BUG] strerror_r failed at %s:%d. Please report haconiwa-dev", __FILE__, __LINE__);
+      mrb_sys_fail(mrb, err_msg);
     }
 
     asprintf(&err_msg, "umount failed: %s", ret);
