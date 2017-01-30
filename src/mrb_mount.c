@@ -8,15 +8,17 @@
 
 #define _GNU_SOURCE
 
-#include <errno.h>
+// clang-format off
 #include <stdio.h>
-#include <string.h>
 #include <sys/mount.h>
+#include <errno.h>
+#include <string.h>
 
-#include "mrb_mount.h"
 #include <mruby.h>
 #include <mruby/data.h>
 #include <mruby/error.h>
+#include "mrb_mount.h"
+// clang-format on
 
 #define DONE mrb_gc_arena_restore(mrb, 0);
 
