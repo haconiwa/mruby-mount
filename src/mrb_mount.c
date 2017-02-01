@@ -47,7 +47,8 @@ static void mrb_mount_sys_fail(mrb_state *mrb, int error_no, const char *fmt, ..
     mrb_sys_fail(mrb, err_msg);
   }
 
-  asprintf(&err_msg, "sys failed %s:%s errno: %d message: %s mrbgem message: %s", __FILE__, __func__, error_no, ret, arg_msg);
+  asprintf(&err_msg, "sys failed %s:%s errno: %d message: %s mrbgem message: %s", __FILE__, __func__, error_no, ret,
+           arg_msg);
   mrb_sys_fail(mrb, err_msg);
 }
 
