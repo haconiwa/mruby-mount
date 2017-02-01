@@ -13,6 +13,7 @@
 #include <sys/mount.h>
 #include <errno.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include <mruby.h>
 #include <mruby/data.h>
@@ -29,27 +30,43 @@ static mrb_value mrb_mount_init(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+#define SYS_FAIL_MESSAGE_LENGTH 2048
+
+static void mrb_mount_sys_fail(mrb_state *mrb, int error_no, const char *fmt, ...)
+{
+  char buf[1024];
+  char arg_msg[SYS_FAIL_MESSAGE_LENGTH];
+  char err_msg[SYS_FAIL_MESSAGE_LENGTH];
+  char *ret;
+  va_list args;
+
+  va_start(args, fmt);
+  vsnprintf(arg_msg, SYS_FAIL_MESSAGE_LENGTH, fmt, args);
+  va_end(args);
+
+  if ((ret = strerror_r(error_no, buf, 1024)) == NULL) {
+    snprintf(err_msg, SYS_FAIL_MESSAGE_LENGTH, "[BUG] strerror_r failed at %s:%s. Please report haconiwa-dev", __FILE__,
+             __func__);
+    mrb_sys_fail(mrb, err_msg);
+  }
+
+  snprintf(err_msg, SYS_FAIL_MESSAGE_LENGTH, "sys failed. errno: %d message: %s mrbgem message: %s", error_no, ret,
+           arg_msg);
+  mrb_sys_fail(mrb, err_msg);
+}
+
 static mrb_value mrb_mount_mount(mrb_state *mrb, mrb_value self)
 {
   // mrb_mount_data *d = DATA_PTR(self);
   char *source, *target, *fstype, *data;
   mrb_int mountflag;
   int ret;
-  char *err_msg;
 
   mrb_get_args(mrb, "zzz!iz!", &source, &target, &fstype, &mountflag, &data);
 
   ret = mount(source, target, fstype, mountflag, data);
   if (ret == -1) {
-    char buf[1024];
-    char *ret;
-    if ((ret = strerror_r(errno, buf, 1024)) == NULL) {
-      asprintf(&err_msg, "[BUG] strerror_r failed at %s:%d. Please report haconiwa-dev", __FILE__, __LINE__);
-      mrb_sys_fail(mrb, err_msg);
-    }
-
-    asprintf(&err_msg, "syscall mount failed. message: %s, args: %s, %s", ret, source, target);
-    mrb_sys_fail(mrb, err_msg);
+    mrb_mount_sys_fail(mrb, errno, "args: %s, %s", source, target);
   }
 
   return mrb_fixnum_value(ret);
@@ -58,7 +75,6 @@ static mrb_value mrb_mount_mount(mrb_state *mrb, mrb_value self)
 static mrb_value mrb_mount_umount(mrb_state *mrb, mrb_value self)
 {
   char *target;
-  char *err_msg;
   mrb_value f = mrb_nil_value();
   int umountflag, ret;
 
@@ -67,15 +83,7 @@ static mrb_value mrb_mount_umount(mrb_state *mrb, mrb_value self)
 
   ret = umount2(target, umountflag);
   if (ret == -1) {
-    char buf[1024];
-    char *ret;
-    if ((ret = strerror_r(errno, buf, 1024)) == NULL) {
-      asprintf(&err_msg, "[BUG] strerror_r failed at %s:%d. Please report haconiwa-dev", __FILE__, __LINE__);
-      mrb_sys_fail(mrb, err_msg);
-    }
-
-    asprintf(&err_msg, "umount failed: %s", ret);
-    mrb_sys_fail(mrb, err_msg);
+    mrb_mount_sys_fail(mrb, errno, "umount failed: %s", ret);
   }
 
   return mrb_fixnum_value(ret);
