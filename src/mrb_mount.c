@@ -34,8 +34,10 @@ static mrb_value mrb_mount_init(mrb_state *mrb, mrb_value self)
 
 static void mrb_mount_sys_fail(mrb_state *mrb, int error_no, const char *fmt, ...)
 {
-  char buf[1024], arg_msg[SYS_FAIL_MESSAGE_LENGTH];
-  char *ret, *err_msg;
+  char buf[1024];
+  char arg_msg[SYS_FAIL_MESSAGE_LENGTH];
+  char err_msg[SYS_FAIL_MESSAGE_LENGTH];
+  char *ret;
   va_list args;
 
   va_start(args, fmt);
@@ -43,12 +45,13 @@ static void mrb_mount_sys_fail(mrb_state *mrb, int error_no, const char *fmt, ..
   va_end(args);
 
   if ((ret = strerror_r(error_no, buf, 1024)) == NULL) {
-    asprintf(&err_msg, "[BUG] strerror_r failed at %s:%s. Please report haconiwa-dev", __FILE__, __func__);
+    snprintf(err_msg, SYS_FAIL_MESSAGE_LENGTH, "[BUG] strerror_r failed at %s:%s. Please report haconiwa-dev", __FILE__,
+             __func__);
     mrb_sys_fail(mrb, err_msg);
   }
 
-  asprintf(&err_msg, "sys failed %s:%s errno: %d message: %s mrbgem message: %s", __FILE__, __func__, error_no, ret,
-           arg_msg);
+  snprintf(err_msg, SYS_FAIL_MESSAGE_LENGTH, "sys failed %s:%s errno: %d message: %s mrbgem message: %s", __FILE__,
+           __func__, error_no, ret, arg_msg);
   mrb_sys_fail(mrb, err_msg);
 }
 
