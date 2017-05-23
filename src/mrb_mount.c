@@ -1,5 +1,5 @@
 /*
-** mrb_mount.c - Mount class
+** mrb_mount.c - Mount module
 **
 ** Copyright (c) Uchio Kondo 2016
 **
@@ -22,13 +22,6 @@
 // clang-format on
 
 #define DONE mrb_gc_arena_restore(mrb, 0);
-
-static mrb_value mrb_mount_init(mrb_state *mrb, mrb_value self)
-{
-  DATA_PTR(self) = NULL;
-
-  return self;
-}
 
 #define SYS_FAIL_MESSAGE_LENGTH 2048
 
@@ -56,7 +49,6 @@ static void mrb_mount_sys_fail(mrb_state *mrb, int error_no, const char *fmt, ..
 
 static mrb_value mrb_mount_mount(mrb_state *mrb, mrb_value self)
 {
-  // mrb_mount_data *d = DATA_PTR(self);
   char *source, *target, *fstype, *data;
   mrb_int mountflag;
   int ret;
@@ -91,10 +83,9 @@ static mrb_value mrb_mount_umount(mrb_state *mrb, mrb_value self)
 void mrb_mruby_mount_gem_init(mrb_state *mrb)
 {
   struct RClass *mount;
-  mount = mrb_define_class(mrb, "Mount", mrb->object_class);
-  mrb_define_method(mrb, mount, "initialize", mrb_mount_init, MRB_ARGS_NONE());
-  mrb_define_method(mrb, mount, "__mount__", mrb_mount_mount, MRB_ARGS_REQ(5));
-  mrb_define_method(mrb, mount, "umount", mrb_mount_umount, MRB_ARGS_ARG(1, 1));
+  mount = mrb_define_module(mrb, "Mount");
+  mrb_define_module_function(mrb, mount, "__mount__", mrb_mount_mount, MRB_ARGS_REQ(5));
+  mrb_define_module_function(mrb, mount, "umount", mrb_mount_umount, MRB_ARGS_ARG(1, 1));
 
   // please see <linux/fs.h>
   mrb_define_const(mrb, mount, "MS_MGC_VAL", mrb_fixnum_value(MS_MGC_VAL));

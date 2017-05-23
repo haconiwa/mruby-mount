@@ -1,9 +1,5 @@
-class Mount
-  class << self
-    alias current_environ new
-  end
-
-  def mount(source, target, options={})
+module Mount
+  def self.mount(source, target, options={})
     unless type = options[:type]
       raise ArgumentError, ":type must be specified"
     end
@@ -15,7 +11,7 @@ class Mount
     __mount__(source, target, type, flag, data)
   end
 
-  def bind_mount(source, target, options={})
+  def self.bind_mount(source, target, options={})
     data = options[:options]
 
     flag =  MS_MGC_VAL
@@ -29,17 +25,17 @@ class Mount
     end
   end
 
-  def make_private(target)
+  def self.make_private(target)
     flag = MS_PRIVATE
     __mount__("none", target, nil, flag, nil)
   end
 
-  def make_rslave(target)
+  def self.make_rslave(target)
     flag = MS_REC | MS_SLAVE
     __mount__("none", target, nil, flag, nil)
   end
 
-  def remount(target, options={})
+  def self.remount(target, options={})
     data = options[:options]
 
     flag =  MS_MGC_VAL | MS_REMOUNT
@@ -48,7 +44,7 @@ class Mount
   end
 
   private
-  def parse_flags(options)
+  def self.parse_flags(options)
     if options.is_a? Integer
       return options
     end
