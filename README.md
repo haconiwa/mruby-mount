@@ -1,15 +1,15 @@
-# mruby-mount   [![Build Status](https://travis-ci.org/haconiwa/mruby-mount.svg?branch=master)](https://travis-ci.org/haconiwa/mruby-mount)
+# mruby-mount [![Build Status](https://travis-ci.org/haconiwa/mruby-mount.svg?branch=master)](https://travis-ci.org/haconiwa/mruby-mount)
 
 Filesystem mount API for mruby
 
-## install by mrbgems
+## install via mrbgems
 
 - add conf.gem line to `build_config.rb`
 
 ```ruby
 MRuby::Build.new do |conf|
 
-    # ... (snip) ...
+  # ... (snip) ...
 
   conf.gem :github => 'haconiwa/mruby-mount'
 end
@@ -18,15 +18,13 @@ end
 ## example
 
 ```ruby
-m = Mount.new
-# => #<Mount:0xc80b90>
-m.make_private("/")
+Mount.make_private("/")
 # => 0
-m.bind_mount("/var/lib/myroot", "/var/lib/newroot")
+Mount.bind_mount("/var/lib/myroot", "/var/lib/newroot")
 # => 0
-m.umount("/var/lib/newroot")
+Mount.umount("/var/lib/newroot")
 # => 0
-m.mount("proc", "/proc", type: "proc")
+Mount.mount("proc", "/proc", type: "proc")
 # => 0
 ```
 
