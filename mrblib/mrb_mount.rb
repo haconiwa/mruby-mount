@@ -30,6 +30,11 @@ module Mount
     __mount__("none", target, nil, flag, nil)
   end
 
+  def self.make_rprivate(target)
+    flag = MS_REC | MS_PRIVATE
+    __mount__("none", target, nil, flag, nil)
+  end
+
   def self.make_rslave(target)
     flag = MS_REC | MS_SLAVE
     __mount__("none", target, nil, flag, nil)
